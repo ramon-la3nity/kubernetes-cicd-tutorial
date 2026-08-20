@@ -9,7 +9,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 (copies the repo)
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -39,7 +39,7 @@ jobs:
           rm -rf gitops
           
           # Clone repository using HTTPS URL without token
-          git clone https://github.com/rslim087a/grade-api-gitops.git gitops
+          git clone https://github.com/ramon-la3nity/grade-api-gitops.git gitops
           cd gitops
           
           if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -55,4 +55,4 @@ jobs:
           git commit -m "Update image to ${{ github.sha }}"
           
           # Push
-          git push -f https://${GIT_TOKEN}@github.com/rslim087a/grade-api-gitops.git main
+          git push -f https://${GIT_TOKEN}@github.com/ramon-la3nity/grade-api-gitops.git main
