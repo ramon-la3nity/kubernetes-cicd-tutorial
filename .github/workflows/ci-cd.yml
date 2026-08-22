@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Log in to GitHub Container Registry using Podman
       - name: Login to GHCR
@@ -31,15 +31,12 @@ jobs:
           podman build \
             --label org.opencontainers.image.source=https://github.com/${{ github.repository }} \
             -t ghcr.io/${{ github.repository }}:${{ github.sha }} \
-            -t ghcr.io/${{ github.repository }}:latest \
             .
 
       # Push both tags to the registry
       - name: Push image
         run: |
-          podman push ghcr.io/${{ github.repository }}:${{ github.sha }}
-          podman push ghcr.io/${{ github.repository }}:latest
-          
+          podman push ghcr.io/${{ github.repository }}:${{ github.sha }}          
 # name: CI/CD Pipeline
 # on:
 #   push:
