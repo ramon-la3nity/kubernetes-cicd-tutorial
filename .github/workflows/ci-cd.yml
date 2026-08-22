@@ -20,7 +20,7 @@ jobs:
       # Log in to GitHub Container Registry using Podman
       - name: Login to GHCR
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
+          echo "${{ secrets.GITOPS_PAT }}" | \
             podman login ghcr.io \
               -u ${{ github.actor }} \
               --password-stdin
