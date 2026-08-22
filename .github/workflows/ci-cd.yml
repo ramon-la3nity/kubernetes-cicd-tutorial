@@ -10,7 +10,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        run: apt install docker
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2      
         with:
