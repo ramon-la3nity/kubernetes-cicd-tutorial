@@ -9,17 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        
-      - name: Kaniko build and push
-        uses: aevea/action-kaniko@master
+        uses: actions/checkout@v3 (copies the repo)
+      - name: Login to GitHub Container Registry
+  uses: docker/login-action@v2      
         with:
-          image: aevea/kaniko
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-          cache: true
-          cache_registry: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
       - name: Update GitOps repository
         shell: bash
         env:
@@ -36,15 +42,11 @@ jobs:
           git clone https://github.com/ramon-la3nity/grade-api-gitops.git gitops
           cd gitops
           
-          cat deployment.yaml
-          
           if [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
           else
             sed -i "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
           fi
-          
-          cat deployment.yaml
           
           # Commit changes
           git config --global user.name "GitHub Actions"
